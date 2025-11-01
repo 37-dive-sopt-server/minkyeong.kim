@@ -7,18 +7,18 @@ import org.sopt.domain.entity.Member;
 import org.sopt.domain.dto.api.response.MemberDetailResponse;
 import org.sopt.domain.dto.api.response.MemberListResponse;
 import org.sopt.domain.dto.service.command.MemberCreateCommand;
+import org.sopt.domain.repository.MemberRepository;
 import org.sopt.global.exception.CustomException;
 import org.sopt.global.exception.ErrorCode;
-import org.sopt.domain.repository.MemoryMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
-    private final MemoryMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public MemberService(MemoryMemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
@@ -30,13 +30,13 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void deleteById(Long memberId) {
-        boolean removedMember = memberRepository.deleteById(memberId);
-
-        if (!removedMember) {
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-    }
+//    public void deleteById(Long memberId) {
+//        boolean removedMember = memberRepository.deleteById(memberId);
+//
+//        if (!removedMember) {
+//            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+//        }
+//    }
 
     public MemberDetailResponse getMemberById(Long id) {
         Member member = memberRepository.findById(id)
@@ -55,9 +55,9 @@ public class MemberService {
         if (email == null || email.isBlank()) {
             throw new CustomException(ErrorCode.EMAIL_BLANK);
         }
-        if (memberRepository.existsByEmail(email)) {
-            throw new CustomException(ErrorCode.MEMBER_BY_EMAIL_ALREADY_EXISTS);
-        }
+//        if (memberRepository.existsByEmail(email)) {
+//            throw new CustomException(ErrorCode.MEMBER_BY_EMAIL_ALREADY_EXISTS);
+//        }
     }
 
     private void validateAge(LocalDate birthDate) {

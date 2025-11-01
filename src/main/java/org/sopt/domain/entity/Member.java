@@ -1,18 +1,32 @@
 package org.sopt.domain.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.time.LocalDate;
 import org.sopt.domain.dto.service.command.MemberCreateCommand;
 import org.sopt.domain.enums.Gender;
 import org.sopt.global.common.entity.BaseEntity;
 import org.sopt.global.utils.IdGenerator;
 
-public class Member extends BaseEntity {
+@Entity
+public class Member extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    private LocalDate birthDate;
+
     private String email;
+
+    private LocalDate birthDate;
+
     private Gender gender;
+
+    protected Member() {
+    }
 
     private Member(Long id, String name, LocalDate birthDate, String email, Gender gender) {
         this.id = id;

@@ -37,15 +37,15 @@ public class MemberController {
         return ApiResponse.success();
     }
 
-    /*
-     * 회원 삭제 API
-     */
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<ApiResponse<Void>> deleteMember(@PathVariable Long memberId) {
-        memberService.deleteById(memberId);
-
-        return ApiResponse.success();
-    }
+//    /*
+//     * 회원 삭제 API
+//     */
+//    @DeleteMapping("/{memberId}")
+//    public ResponseEntity<ApiResponse<Void>> deleteMember(@PathVariable Long memberId) {
+//        memberService.deleteById(memberId);
+//
+//        return ApiResponse.success();
+//    }
 
     /*
      * 회원 단건 조회 API
