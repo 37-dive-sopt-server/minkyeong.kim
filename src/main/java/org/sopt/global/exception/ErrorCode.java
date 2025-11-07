@@ -17,7 +17,10 @@ public enum ErrorCode {
     AGE_MUST_UPPER_THAN_20(HttpStatus.BAD_REQUEST, "B005", "20세 미만은 가입할 수 없습니다."),
 
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "존재하지 않는 회원입니다."),
-    MEMBER_BY_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "C001", "해당 이메일로 가입된 회원이 이미 존재합니다.");
+    MEMBER_BY_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "C001", "해당 이메일로 가입된 회원이 이미 존재합니다."),
+
+    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "N101", "존재하지 않는 게시글입니다."),
+    ARTICLE_TITLE_DUPLICATED(HttpStatus.CONFLICT, "C101", "동일한 제목의 게시글이 이미 존재합니다.");
 
     private final HttpStatus httpStatus;
     private final String errorCode;
