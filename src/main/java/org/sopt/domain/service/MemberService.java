@@ -1,74 +1,55 @@
 package org.sopt.domain.service;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
-import org.sopt.domain.entity.Member;
+import lombok.RequiredArgsConstructor;
 import org.sopt.domain.dto.api.response.MemberDetailResponse;
 import org.sopt.domain.dto.api.response.MemberListResponse;
 import org.sopt.domain.dto.service.command.MemberCreateCommand;
+import org.sopt.domain.entity.Member;
 import org.sopt.domain.repository.MemberRepository;
 import org.sopt.global.exception.CustomException;
 import org.sopt.global.exception.ErrorCode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
+
     private final MemberRepository memberRepository;
 
-    @Autowired
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
+    @Transactional
     public void createMember(MemberCreateCommand command) {
-        validateDuplicateEmail(command.email());
-        validateAge(command.birthDate());
+        command.validateAge();
 
-        Member member = Member.create(command);
-        memberRepository.save(member);
+        if (memberRepository.existsByEmail(command.email().trim())) {
+            throw new CustomException(ErrorCode.MEMBER_BY_EMAIL_ALREADY_EXISTS);
+        }
+
+        memberRepository.save(Member.create(command));
     }
 
-//    public void deleteById(Long memberId) {
-//        boolean removedMember = memberRepository.deleteById(memberId);
-//
-//        if (!removedMember) {
-//            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-//        }
-//    }
+    @Transactional
+    public void deleteById(String memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
 
-    public MemberDetailResponse getMemberById(Long id) {
+        memberRepository.deleteById(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDetailResponse getMemberById(String id) {
         Member member = memberRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return MemberDetailResponse.from(member);
     }
 
+    @Transactional(readOnly = true)
     public MemberListResponse getAllMembers() {
         List<Member> members = memberRepository.findAll();
 
         return MemberListResponse.from(members);
-    }
-
-    private void validateDuplicateEmail(String email) {
-        if (email == null || email.isBlank()) {
-            throw new CustomException(ErrorCode.EMAIL_BLANK);
-        }
-//        if (memberRepository.existsByEmail(email)) {
-//            throw new CustomException(ErrorCode.MEMBER_BY_EMAIL_ALREADY_EXISTS);
-//        }
-    }
-
-    private void validateAge(LocalDate birthDate) {
-        if (birthDate == null) {
-            throw new CustomException(ErrorCode.INVALID_DATE_FORMAT);
-        }
-
-        int age = Period.between(birthDate, LocalDate.now()).getYears();
-
-        if (age < 20) {
-            throw new CustomException(ErrorCode.AGE_MUST_UPPER_THAN_20);
-        }
     }
 }

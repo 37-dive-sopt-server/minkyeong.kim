@@ -18,7 +18,7 @@ public record MemberListResponse(
     }
 
     public record MemberDto(
-        Long id,
+        String id,
         String name,
         LocalDate birthDate,
         String email,
