@@ -5,7 +5,7 @@ import org.sopt.domain.entity.Member;
 import org.sopt.domain.enums.Gender;
 
 public record MemberDetailResponse(
-    Long id,
+    String id,
     String name,
     LocalDate birthDate,
     String email,
